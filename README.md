@@ -3,7 +3,7 @@
 A powerline-style status bar for [Claude Code](https://docs.anthropic.com/en/docs/claude-code) that displays rich project context at a glance — git state, tech stacks, dev tools, context window usage, session cost, and more.
 
 <!-- TODO: Add screenshot -->
-<!-- ![Claude Statusline](screenshots/statusline.png) -->
+<!-- ![sameh-statusline](screenshots/statusline.png) -->
 
 ## Features
 
@@ -34,9 +34,35 @@ A powerline-style status bar for [Claude Code](https://docs.anthropic.com/en/doc
 
 ## Requirements
 
-- **Python 3.10+** (uses stdlib only — zero external dependencies)
-- **Nerd Font** in your terminal — [Hack](https://github.com/ryanoasis/nerd-fonts/tree/master/patched-fonts/Hack), [FiraCode](https://github.com/ryanoasis/nerd-fonts/tree/master/patched-fonts/FiraCode), [JetBrains Mono](https://github.com/ryanoasis/nerd-fonts/tree/master/patched-fonts/JetBrainsMono), or any [Nerd Font](https://www.nerdfonts.com/)
-- **`gh` CLI** (optional) — enables PR status detection
+### Python 3.10+
+
+Uses stdlib only — zero external dependencies. Comes pre-installed on macOS and most Linux distributions.
+
+### Nerd Font (required)
+
+This statusline uses [Nerd Font](https://www.nerdfonts.com/) glyphs extensively for icons — branch symbols, language logos, git indicators, powerline separators, and more. **Without a Nerd Font, the status bar will show missing-glyph squares instead of icons.**
+
+Install any Nerd Font patched variant and set it as your terminal font:
+
+| Font | Install |
+|------|---------|
+| [Hack Nerd Font](https://github.com/ryanoasis/nerd-fonts/tree/master/patched-fonts/Hack) | `brew install font-hack-nerd-font` |
+| [FiraCode Nerd Font](https://github.com/ryanoasis/nerd-fonts/tree/master/patched-fonts/FiraCode) | `brew install font-fira-code-nerd-font` |
+| [JetBrains Mono Nerd Font](https://github.com/ryanoasis/nerd-fonts/tree/master/patched-fonts/JetBrainsMono) | `brew install font-jetbrains-mono-nerd-font` |
+
+> **Tip:** On macOS, tap the cask first: `brew tap homebrew/cask-fonts` (may not be needed on newer Homebrew versions). On Linux, download from [nerdfonts.com/font-downloads](https://www.nerdfonts.com/font-downloads) and install to `~/.local/share/fonts/`. Then select the Nerd Font variant in your terminal emulator's font settings.
+
+To verify your font has Nerd Font glyphs, run:
+
+```bash
+echo -e "\ue0b6 \ue0b4 \ue0b0 \ue0a0 \uf07c \ue606 \ue718"
+```
+
+You should see: rounded half-circles, a triangle, a branch symbol, a folder, a Python logo, and a Node.js logo. If you see boxes or question marks, your terminal is not using a Nerd Font.
+
+### `gh` CLI (optional)
+
+Enables PR status detection (draft, open, approved, changes requested, merged). Install with `brew install gh` and authenticate with `gh auth login`.
 
 ## Installation
 
@@ -102,7 +128,7 @@ The statusline script:
 2. **Detects** git state via `git status --porcelain=v2` and related commands
 3. **Detects** tech stacks by scanning for marker files (`package.json`, `pyproject.toml`, `Cargo.toml`, etc.)
 4. **Detects** dev tools by checking for config files and CLI availability
-5. **Caches** slow-changing data (stacks, tools, PR status) to `~/.cache/sameh-statusline/`
+5. **Caches** slow-changing data (stacks, tools, PR status) to `~/.cache/claude-statusline/`
 6. **Renders** ANSI-escaped powerline segments with 256-color styling
 7. **Truncates** progressively if the output exceeds terminal width
 
@@ -168,49 +194,72 @@ The cost emoji tells a story as your session spending grows:
 | $0.50 | `🫧` | Bubble |
 | $1 | `🪙` | A coin |
 | $2 | `💵` | A bill |
-| $3-5 | `☕🍩` | Coffee & donuts |
-| $5-10 | `🌯🍕` | Lunch |
-| $10-20 | `🍱🎫📚` | Bento, tickets, books |
-| $20-50 | `👕🎮👟💇🛒` | Shopping |
-| $50-100 | `⛽💊🎭🧳` | Gas, meds, shows |
-| $100-200 | `💳📱🎸🎿✈️🏨` | Big purchases |
-| $200-300 | `🔥😰🚗💸` | Getting serious |
-| $300-400 | `🤑😱🏦🚨` | Panic territory |
-| $400+ | `📉🆘💀☠️🪦☢️🌋💥` | RIP |
+| $3-5 | `☕` `🍩` | Coffee & donuts |
+| $5-10 | `🌯` `🍕` | Lunch |
+| $10-20 | `🍱` `🎫` `📚` | Bento, tickets, books |
+| $20-50 | `👕` `🎮` `👟` `💇` `🛒` | Shopping |
+| $50-100 | `⛽` `💊` `🎭` `🧳` | Gas, meds, shows |
+| $100-200 | `💳` `📱` `🎸` `🎿` `✈️` `🏨` | Big purchases |
+| $200-300 | `🔥` `😰` `🚗` `💸` | Getting serious |
+| $300-400 | `🤑` `😱` `🏦` `🚨` | Panic territory |
+| $400+ | `📉` `🆘` `💀` `☠️` `🪦` `☢️` `🌋` `💥` | RIP |
 
-### Git Host Icons
+### Git Hosts
 
-| Host | Icon |
-|------|------|
-| GitHub | `󰊤` |
-| GitLab | `󰮠` |
-| Azure DevOps | `󰠅` |
-| Bitbucket | `` |
-| Local (no remote) | `` |
+The project pill shows different icons based on the git remote host:
+
+| Host | Description |
+|------|-------------|
+| GitHub | GitHub logo (Nerd Font `nf-md-github`) |
+| GitLab | GitLab logo (Nerd Font `nf-md-gitlab`) |
+| Azure DevOps | Azure logo (Nerd Font `nf-md-microsoft_azure`) |
+| Bitbucket | Bitbucket logo (Nerd Font `nf-dev-bitbucket`) |
+| Local (no remote) | Git logo (no remote tracking) |
 
 ### Stack Badges
 
-Auto-detected with brand colors:
+Languages and frameworks are auto-detected from project marker files and displayed as brand-colored pill badges:
 
-| Stack | Icon | Badge Color |
-|-------|------|-------------|
-| Python | `` | Yellow on blue |
-| Next.js | `` | White on black |
-| React | `` | Cyan on dark teal |
-| TypeScript | `` | White on blue |
-| Node.js | `` | Sky blue on green |
-| Vue | `` | Green on dark green |
-| Angular | `` | Red on dark red |
-| Svelte | `` | Orange on dark red |
-| Go | `` | Cyan on dark teal |
-| Rust | `` | Orange on dark brown |
-| Ruby | `` | Red on dark red |
+| Stack | Detected by | Badge Style |
+|-------|-------------|-------------|
+| Python | `pyproject.toml`, `requirements.txt`, `setup.py`, `uv.lock` | Yellow icon on CPython blue |
+| Next.js | `"next"` in `package.json` | White icon on near-black |
+| React | `"react"` in `package.json` | Cyan icon on dark teal |
+| TypeScript | `tsconfig.json` present | White icon on TS blue |
+| Node.js | `package.json` (fallback) | Sky blue icon on dark green |
+| Vue | `"vue"` in `package.json` | Green icon on dark green |
+| Angular | `"@angular/core"` in `package.json` | Red icon on dark red |
+| Svelte | `"svelte"` in `package.json` | Orange icon on dark red |
+| Go | `go.mod` | Cyan icon on dark teal |
+| Rust | `Cargo.toml` | Orange icon on dark brown |
+| Ruby | `Gemfile` | Red icon on dark red |
 
 ### Dev Tools
 
-Auto-detected from project files:
+Auto-detected from project config files, docker-compose, `.env` files, and CLI availability:
 
-Docker, Kubernetes, Helm, AWS, Azure, GCP, Vercel, Terraform, Ansible, GitHub CI, GitLab CI, DVC, PostgreSQL, Redis, MongoDB, pnpm, yarn, npm, uv, poetry, Nginx, Supabase, Firebase
+| Tool | Detected by |
+|------|-------------|
+| Docker | `Dockerfile`, `docker-compose.yml`, `.dockerignore` |
+| Kubernetes | `k8s/`, `kustomization.yaml` |
+| Helm | `Chart.yaml` |
+| AWS | `samconfig.toml`, `.aws/`, `cdk.json`, `aws` CLI |
+| Azure | `.azure/`, `azure-pipelines.yml` |
+| GCP | `app.yaml`, `.gcloud/` |
+| Vercel | `vercel.json`, `.vercel/` |
+| Terraform | `.terraform/`, `*.tf` files |
+| Ansible | `ansible.cfg`, `playbook.yml` |
+| GitHub CI | `.github/workflows/` |
+| GitLab CI | `.gitlab-ci.yml` |
+| DVC | `.dvc/`, `dvc.yaml` |
+| PostgreSQL | `postgres`/`postgresql` in `.env` or docker-compose |
+| Redis | `redis` in `.env` or docker-compose |
+| MongoDB | `mongo`/`mongodb` in `.env` or docker-compose |
+| pnpm / yarn / npm | Respective lock files |
+| uv / poetry | `uv.lock` / `poetry.lock` |
+| Nginx | `nginx.conf`, `nginx/` |
+| Supabase | `supabase/` |
+| Firebase | `firebase.json`, `.firebaserc` |
 
 ## Configuration
 
@@ -229,7 +278,7 @@ The `type: "command"` setting tells Claude Code to pipe its JSON state to the co
 
 ## Contributing
 
-Contributions welcome! The entire statusline is a single Python file (`statusline.py`) with zero dependencies. Keep it that way.
+Contributions welcome! The entire statusline is a single Python file (`statusline.py`) with zero external dependencies. Keep it that way.
 
 1. Fork the repo
 2. Make your changes to `statusline.py`

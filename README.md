@@ -2,8 +2,7 @@
 
 A powerline-style status bar for [Claude Code](https://docs.anthropic.com/en/docs/claude-code) that displays rich project context at a glance — git state, tech stacks, dev tools, context window usage, session cost, and more.
 
-<!-- TODO: Add screenshot -->
-<!-- ![sameh-statusline](screenshots/statusline.png) -->
+![sameh-statusline](screenshots/sameh-statusline-img.png)
 
 ## Features
 
